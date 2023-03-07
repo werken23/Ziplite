@@ -10,10 +10,3 @@ item:
     RecipeItem:
       - I: IRON_INGOT
       - L: LEAD
-  DebugStickRecipe:
-    ItemShape:
-      - D
-      - S
-    RecipeItem:
-      - D: DIAMOND
-      - S: STICK

@@ -196,9 +196,6 @@ public class PlayerZipliningManager implements Listener {
         if (!e.getHand().equals(EquipmentSlot.HAND))
             return;
 
-        if (_plugin.debugitem.isItem(e.getPlayer().getInventory().getItemInMainHand()))
-            return;
-
         var entity = e.getRightClicked();
         var zipplayer = new ZiplinePlayer(e.getPlayer());
         if (entity.getType() == EntityType.LEASH_HITCH) {

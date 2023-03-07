@@ -22,7 +22,6 @@ public class Zipline extends JavaPlugin implements Listener, CommandExecutor {
     protected PlayerZipliningManager zippingManager;
     protected ZiplineVisualizeManager visualManger;
     protected ZiplineItem ziplimeitem;
-    protected DebugStickItem debugitem;
     public ConfigManager config;
     public ZiplineEventDispatcher eventDispatcher;
     public Namespacekey keys;
@@ -34,10 +33,6 @@ public class Zipline extends JavaPlugin implements Listener, CommandExecutor {
         var arg = args[0];
         if (arg == null)
             return false;
-        if (arg.equals("DEBUG")) {
-            var p = (Player) sender;
-            debugitem.dropItem(p.getLocation(), 1);
-        }
 
         if (arg.equals(("delete"))) {
             var p = (Player) sender;
@@ -75,12 +70,10 @@ public class Zipline extends JavaPlugin implements Listener, CommandExecutor {
         zippingManager = new PlayerZipliningManager(this);
         visualManger = new ZiplineVisualizeManager(this);
         ziplimeitem = new ZiplineItem(this);
-        debugitem = new DebugStickItem(this);
         keys = new Namespacekey(this);
 
         Bukkit.getPluginManager().registerEvents(ziplineManager, this);
         Bukkit.getPluginManager().registerEvents(zippingManager, this);
         Bukkit.getPluginManager().registerEvents(visualManger, this);
-        Bukkit.getPluginManager().registerEvents(debugitem, this);
     }
 }
