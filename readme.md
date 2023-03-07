@@ -1,4 +1,4 @@
-# Zipline Plugin for Spigot
+# Light Zipline Plugin for Spigot, forked from https://github.com/N-Magi/Spigot-Ziplines
 
 it doesn't work at peaceful
 
@@ -19,8 +19,6 @@ https://www.youtube.com/watch?v=qa2I2-lFgh0
 |`finizh_raduis`|radius of finish zipling|Block|
 |`ZiplineRecipe`.`ItemShape`|Recipe Shape of Zipline Item||
 |`ZiplineRecipe`.`RecipeItem`|ItemList of Recipe Shape is used||
-|`DebugStickRecipe`.`ItemShape`| same as ZiplineRecipe||
-|`DebugStickRecipe`.`RecipeItem`| same as ZiplineRecipe||
 
 ## Semantic Versioning
 
