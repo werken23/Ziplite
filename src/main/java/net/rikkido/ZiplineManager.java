@@ -11,7 +11,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LeashHitch;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Slime;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -22,8 +21,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import net.rikkido.Event.PlayerHandZiplineItemHandler;
 import net.rikkido.Event.ZiplineEnterPlayerRangeHandler;
@@ -62,18 +59,18 @@ public class ZiplineManager implements Listener {
     }
 
     public boolean dispatchZiplineEnterPlayerRange(Player a) {
-        var silmes = ZiplineManager.getPathSlimes(a.getLocation(), 20f, 20f, 20f);
-        if (silmes.size() < 1)
+        var slimes = ZiplineManager.getPathSlimes(a.getLocation(), 20f, 20f, 20f);
+        if (slimes.size() < 1)
             return false;
-        var event = new ZiplineEnterPlayerRangeHandler(a, silmes);
+        var event = new ZiplineEnterPlayerRangeHandler(a, slimes);
         _plugin.getServer().getPluginManager().callEvent(event);
         return true;
     }
 
-    
-    public void enableDebugMode(boolean flag) {
-        DEBUG = flag;
-    }
+    //TODO replace by config entry
+    //public void enableDebugMode(boolean flag) {
+    //    DEBUG = flag;
+    //}
 
     private static Chunk ensureChunk(Location loc) {
         var chunk = loc.getChunk();
@@ -109,8 +106,7 @@ public class ZiplineManager implements Listener {
             return null;
         }
 
-        var slime = mergePathSlime(path_slime);
-        return slime;
+        return mergePathSlime(path_slime);
     }
 
     public static List<PathSlime> getPathSlimes(Location loc, Float x, Float y, Float z) {
@@ -126,10 +122,9 @@ public class ZiplineManager implements Listener {
     }
 
     public boolean verifyPath(PathSlime slime) {
-        var pathes = slime.getPathData();
-        var clone = pathes;
+        var paths = slime.getPathData();
         var loc = slime.getSlime().getLocation();
-        for (var path : clone) {
+        for (var path : paths) {
             var chunk = ensureChunk(path);
             var dSlime = getPathSlime(path);
             if (dSlime == null) {
@@ -156,7 +151,7 @@ public class ZiplineManager implements Listener {
             var block = world.getBlockAt(slimeLoc);
             if (MaterialTags.FENCES.isTagged(block.getType()))
                 continue;
-            destoryPath(block.getLocation());
+            destroyPath(block.getLocation());
         }
     }
 
@@ -166,42 +161,40 @@ public class ZiplineManager implements Listener {
         var block = e.getBlock();
         if (!MaterialTags.FENCES.isTagged(block.getType()))
             return;
-        if (!destoryPath(block.getLocation())) {
+        if (!destroyPath(block.getLocation())) {
             e.getPlayer().sendMessage("経路の削除に失敗しました。");
         }
     }
 
-    // 爆発による破壊
+    // Destruction by explosion
     @EventHandler
     public void onExplodedEvent(BlockExplodeEvent e) {
         var breakBlock = e.blockList();
         for (Block block : breakBlock) {
-            destoryPath(block.getLocation());
+            destroyPath(block.getLocation());
         }
     }
 
-    // 燃え尽きた場合による破壊
+    // Destruction due to burnout
     @EventHandler
-    public void onBlockBruned(BlockBurnEvent e) {
+    public void onBlockBurned(BlockBurnEvent e) {
         var block = e.getBlock();
-        destoryPath(block.getLocation());
+        destroyPath(block.getLocation());
     }
 
-    public boolean destoryPath(Location location) {
+    public boolean destroyPath(Location location) {
 
-        var fenceLoc = location;
-
-        var chunk = ensureChunk(fenceLoc);
+        var chunk = ensureChunk(location);
 
         if (!chunk.isLoaded())
             return false;
 
-        if (getPathSlimes(fenceLoc, 0.3f, 0.5f, 0.3f).size() < 1)
+        if (getPathSlimes(location, 0.3f, 0.5f, 0.3f).size() < 1)
             return true;
-        var pathslime = getPathSlime(fenceLoc);
-        var itemAmount = rmPath(pathslime);
+        var pathSlime = getPathSlime(location);
+        var itemAmount = rmPath(pathSlime);
 
-        _plugin.ziplimeitem.dropItem(fenceLoc, itemAmount);
+        _plugin.ziplimeitem.dropItem(location, itemAmount);
         chunk.unload();
         return true;
     }
@@ -216,17 +209,17 @@ public class ZiplineManager implements Listener {
         if (paths != null) {
             for (Location location : paths) {
                 var connectPathSlime = getPathSlime(location);
-                List<Location> connecList = connectPathSlime.getPathData();
+                List<Location> connectList = connectPathSlime.getPathData();
                 if (DEBUG)
-                    _plugin.getLogger().info("bfore list size: " + connecList.size());
+                    _plugin.getLogger().info("bfore list size: " + connectList.size());
 
-                connecList.remove(pathslime.getSlime().getLocation());
+                connectList.remove(pathslime.getSlime().getLocation());
                 if (DEBUG)
-                    _plugin.getLogger().info("after list size: " + connecList.size());
+                    _plugin.getLogger().info("after list size: " + connectList.size());
 
-                if (connecList.size() < 1)
+                if (connectList.size() < 1)
                     connectPathSlime.getSlime().remove();
-                connectPathSlime.setPathData(connecList);
+                connectPathSlime.setPathData(connectList);
 
             }
         }
@@ -245,7 +238,7 @@ public class ZiplineManager implements Listener {
         item.setItemMeta(meta);
     }
 
-    // スライムの死亡無効化
+    // Slime death nullification
     @EventHandler
     public void onEntityDeath(EntityDeathEvent e) {
         var entity = e.getEntity();
@@ -258,7 +251,7 @@ public class ZiplineManager implements Listener {
 
     private Object[] spawnHitches(PathSlime[] slimes) {
         var res = new ArrayList<LeashHitch>();
-        // どうせ消えるなら柵と同じ場所に生成させるようにする
+        // If they're going to disappear anyway, make sure they're generated in the same place as the fence.
         for (PathSlime slime : slimes) {
             var hitch = spawnHitch(slime);
             res.add(hitch);
@@ -298,8 +291,7 @@ public class ZiplineManager implements Listener {
             dst_data.add(spawnLocation);
         dst.setPathData(dst_data);
 
-        PathSlime[] res = { src, dst };
-        return res;
+        return new PathSlime[]{ src, dst };
     }
 
     public PathSlime spawnSlime(Location spawnLoc) {

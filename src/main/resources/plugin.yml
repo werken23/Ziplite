@@ -1,6 +1,6 @@
 main: net.rikkido.Zipline
 name: ziplines
-version: 0.1
+version: 0.2
 api: 1.18.1
 api-version: 1.18
 commands:

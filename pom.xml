@@ -7,7 +7,7 @@
 
   <groupId>net.rikkido</groupId>
   <artifactId>ziplite</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.2</version>
   <packaging>jar</packaging>
   <name>ziplines</name>
 
