@@ -3,6 +3,7 @@ package net.rikkido;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.destroystokyo.paper.MaterialTags;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -153,7 +154,7 @@ public class ZiplineManager implements Listener {
             var slimeLoc = slime.getSlime().getLocation();
             var world = slime.getSlime().getWorld();
             var block = world.getBlockAt(slimeLoc);
-            if (block.getType() == Material.OAK_FENCE)
+            if (MaterialTags.FENCES.isTagged(block.getType()))
                 continue;
             destoryPath(block.getLocation());
         }
@@ -163,7 +164,7 @@ public class ZiplineManager implements Listener {
     @EventHandler
     public void onPlayerBreakPathFence(BlockBreakEvent e) {
         var block = e.getBlock();
-        if (block.getType() != Material.OAK_FENCE)
+        if (!MaterialTags.FENCES.isTagged(block.getType()))
             return;
         if (!destoryPath(block.getLocation())) {
             e.getPlayer().sendMessage("経路の削除に失敗しました。");
@@ -316,7 +317,7 @@ public class ZiplineManager implements Listener {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
             return;
         var clicked_block = event.getClickedBlock();
-        if (clicked_block.getType() != Material.OAK_FENCE)
+        if (!MaterialTags.FENCES.isTagged(clicked_block.getType()))
             return;
         var player = event.getPlayer();
         var items = player.getInventory().getItemInMainHand();
@@ -382,7 +383,7 @@ public class ZiplineManager implements Listener {
             return;
         }
 
-        if (Material.OAK_FENCE != world.getBlockAt(src_loc).getType()) {
+        if (!MaterialTags.FENCES.isTagged(world.getBlockAt(src_loc).getType())) {
             player.sendMessage("Something has happened at the starting point. Delete the connection.");
             _plugin.ziplimeitem.removeZiplineFlag(items);
             return;
