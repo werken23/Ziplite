@@ -44,7 +44,7 @@ public class ZiplineVisualizeManager implements Listener {
                 if (distance > ziplineMaxRadius)
                     color = TextColor.color(255, 0, 0);
                 player.sendActionBar(Component
-                        .text(String.format("距離 %.1f / %.1fブロック 開始地点を再度選択でキャンセル",
+                        .text(String.format("Distance %.1f / %.1f blocks. Cancel by selecting start point again!",
                                 distance,
                                 ziplineMaxRadius))
                         .color(color));
@@ -54,14 +54,14 @@ public class ZiplineVisualizeManager implements Listener {
         if (_plugin.ziplimeitem.isZiplineFlaged(handItem)) {
 
             player.sendActionBar(Component
-                    .text(String.format("距離 %.1fブロック 開始地点を再度選択でキャンセル",
+                    .text(String.format("Distance %.1f blocks. Cancel by selecting the starting point again!",
                             _plugin.ziplimeitem.getZiplineFlag(handItem).distance(player.getLocation())))
                     .color(TextColor.color(255, 255, 0)));
             return;
         }
 
         player.sendActionBar(Component
-                .text("未設定")
+                .text("Not set")
                 .color(TextColor.color(255, 255, 0)));
 
     }
@@ -81,7 +81,7 @@ public class ZiplineVisualizeManager implements Listener {
     public void spanwParticleLines(Location source, Location destination, int stage) {
         var world = source.getWorld();
         if (world != destination.getWorld())
-            return; // 同一ワールドのみ
+            return; // Same world only
 
         // var particlePerBlock = 2.0;
         var vector = source.toVector().subtract(destination.toVector()); // 基準はsource

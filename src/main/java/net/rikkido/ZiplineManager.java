@@ -342,7 +342,7 @@ public class ZiplineManager implements Listener {
         if (items.getType() != Material.LEAD)
             return;
         if (!_plugin.ziplimeitem.isItem(items)) {
-            player.sendMessage("バージョンアップによりレシピが変更されました。\nクラフトテーブルで、リードを鉄インゴットで挟み込むとアイテムが作成できます");
+            player.sendMessage("The recipe has been changed due to an upgrade.\nAt the crafting table, the item can be created by clamping the lead between iron ingots");
             return;
         }
 
@@ -359,31 +359,31 @@ public class ZiplineManager implements Listener {
             return;
         }
 
-        // 二回目以降
+        // After the second time
         var src_loc = _plugin.ziplimeitem.getZiplineFlag(items);
         if (DEBUG)
             _plugin.getLogger().info("container readed");
 
         var diff = src_loc.toVector().subtract(dst_loc.toVector());
-        // 同じ場所でのラインは取り消し
+        // Lines at the same location are canceled.
         if (src_loc.equals(dst_loc)) {
             _plugin.ziplimeitem.removeZiplineFlag(items);
             return;
         }
 
         if (diff.length() <= 3.0f) {
-            player.sendMessage("近距離での接続はできません。");
+            player.sendMessage("Short distance connections are not possible.");
             return;
         }
 
         var maxRadius = _ziplineMaxRadius;
         if (diff.length() >= maxRadius && maxRadius > 0) {
-            player.sendMessage(String.format("%.3fブロック以上の距離のラインは設置できません", maxRadius));
+            player.sendMessage(String.format("Lines cannot be installed for distances greater than %.3f blocks.", maxRadius));
             return;
         }
 
         if (Material.OAK_FENCE != world.getBlockAt(src_loc).getType()) {
-            player.sendMessage("開始地点で何かが起きたようです 接続を削除します。");
+            player.sendMessage("Something has happened at the starting point. Delete the connection.");
             _plugin.ziplimeitem.removeZiplineFlag(items);
             return;
         }
@@ -391,7 +391,7 @@ public class ZiplineManager implements Listener {
         var path = getPathSlime(src_loc);
         if (path != null)
             if (path.getPathData().contains(dst_loc)) {
-                player.sendMessage("二度付け禁止ダメ絶対, 経路消しとくよ");
+                player.sendMessage("No double dipping, I'll erase the route.");
                 _plugin.ziplimeitem.removeZiplineFlag(items);
                 return;
             }
@@ -399,7 +399,7 @@ public class ZiplineManager implements Listener {
         var slimes = spawnSlimes(src_loc, dst_loc);
         spawnHitches(slimes);
 
-        // リードを消費
+        // Consuming lead
         _plugin.ziplimeitem.setAmount(items, items.getAmount() - 1);
     }
 

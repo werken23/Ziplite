@@ -56,7 +56,7 @@ public class PlayerZipliningManager implements Listener {
         MovePlayer res = playerZiplining(mp);
 
         player.getPlayer().sendActionBar(Component
-                .text(String.format("`shit`キーで途中下車"))
+                .text(String.format("`shift`to dismount!"))
                 .color(TextColor.color(255, 255, 0)));
 
         // 終了時処理
@@ -178,6 +178,7 @@ public class PlayerZipliningManager implements Listener {
         var player = new ZiplinePlayer(e.getPlayer());
         if (player.getPlayer().hasGravity() == false)
             player.getPlayer().setGravity(true);
+        // unmount zipline
         player.removeZippingData();
     }
 
@@ -190,6 +191,7 @@ public class PlayerZipliningManager implements Listener {
     @EventHandler
     public void onPlayerStartZiplining(PlayerInteractEntityEvent e) {
 
+        // dont start zipline when sneaking
         if (e.getPlayer().isSneaking() == true)
             return;
 
