@@ -1,6 +1,7 @@
 package net.rikkido;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -59,7 +60,7 @@ public class PlayerZipliningManager implements Listener {
                 .text(String.format("`shift`to dismount!"))
                 .color(TextColor.color(255, 255, 0)));
 
-        // 終了時処理
+        // end processing
         if (res.isfinished) {
             if (DEBUG)
                 _plugin.getLogger().info("call zipline finish Process");
@@ -68,7 +69,7 @@ public class PlayerZipliningManager implements Listener {
                 stopPlayerZipping(player);
                 return;
             }
-            var nextloc = culculateNextPath(slime, mp.oldlocs, player.getPlayer());
+            var nextloc = calculateNextPath(slime, mp.oldlocs, player.getPlayer());
             if (nextloc == null) {
                 stopPlayerZipping(player);
                 return;
@@ -100,7 +101,7 @@ public class PlayerZipliningManager implements Listener {
     // 移動開始
     public void playerStartZiplining(ZiplinePlayer p, PathSlime e) {
         List<Location> oldLocs = new ArrayList<Location>();
-        Location loc = culculateNextPath(e, oldLocs, p.getPlayer());
+        Location loc = calculateNextPath(e, oldLocs, p.getPlayer());
 
         if (DEBUG) {
             var s1 = String.format("%f, %f, %f", loc.getX(), loc.getY(), loc.getZ());
@@ -141,7 +142,7 @@ public class PlayerZipliningManager implements Listener {
         var loc = player.getLocation();
         var dst_item = mplayer;
 
-        // 異なるワールドでの移動について中止
+        // Cancellation of movement in different worlds
         if (!loc.getWorld().equals(dst_item.dst.getWorld())) {
             mplayer.isfinished = true;
             return mplayer;
@@ -241,13 +242,22 @@ public class PlayerZipliningManager implements Listener {
         e.setCancelled(true);
     }
 
-    public Location culculateNextPath(PathSlime ropeEdge, List<Location> oldlocs, Player player) {
+    public Location calculateNextPath(PathSlime ropeEdge, List<Location> oldlocs, Player player) {
         if (ropeEdge.hasPathData()) {
             List<Location> nextLocs = ropeEdge.getPathData();
             var current = ropeEdge.getSlime().getLocation();
             nextLocs.remove(ropeEdge.getSlime().getLocation());
             var copylocs = oldlocs;
-            nextLocs = nextLocs.stream().filter(f -> !copylocs.contains(f)).toList();
+            if (copylocs.size() == 3) {
+                List<Location> finalCopylocs1 = copylocs;
+                nextLocs = nextLocs.stream().filter(f -> !finalCopylocs1.contains(f)).toList();
+            }
+
+            if (copylocs.size() > 3) {
+                copylocs = Arrays.asList(copylocs.get(copylocs.size() - 2));
+                List<Location> finalCopylocs = copylocs;
+                nextLocs = nextLocs.stream().filter(f -> !finalCopylocs.contains(f)).toList();
+            }
 
             if (nextLocs.size() < 1)
                 return null;

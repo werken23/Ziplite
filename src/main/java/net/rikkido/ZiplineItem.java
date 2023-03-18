@@ -19,7 +19,6 @@ public class ZiplineItem implements IItemBase {
     Zipline _plugin;
 
     public ItemStack zipline;
-    public ItemStack debugStick;
 
     public static NamespacedKey ITEM_ZIPLINE;
     static NamespacedKey KEY;
