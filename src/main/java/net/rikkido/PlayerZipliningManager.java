@@ -90,7 +90,6 @@ public class PlayerZipliningManager implements Listener {
             _plugin.getLogger().info("call continue zipline process");
 
         player.setZippingData(res);
-        return;
     }
 
     public void stopPlayerZipping(ZiplinePlayer p) {
@@ -177,10 +176,10 @@ public class PlayerZipliningManager implements Listener {
     @EventHandler
     public void onPlayerLeave(PlayerToggleSneakEvent e) {
         var player = new ZiplinePlayer(e.getPlayer());
-        if (player.getPlayer().hasGravity() == false)
+        if (!player.getPlayer().hasGravity())
             player.getPlayer().setGravity(true);
         // unmount zipline
-        player.removeZippingData();
+        //player.removeZippingData();
     }
 
     @EventHandler
@@ -193,7 +192,7 @@ public class PlayerZipliningManager implements Listener {
     public void onPlayerStartZiplining(PlayerInteractEntityEvent e) {
 
         // dont start zipline when sneaking
-        if (e.getPlayer().isSneaking() == true)
+        if (e.getPlayer().isSneaking())
             return;
 
         if (!e.getHand().equals(EquipmentSlot.HAND))
@@ -248,6 +247,7 @@ public class PlayerZipliningManager implements Listener {
             var current = ropeEdge.getSlime().getLocation();
             nextLocations.remove(ropeEdge.getSlime().getLocation());
             var copyLocations = oldLocations;
+
             if (copyLocations.size() == 3) {
                 List<Location> finalCopyLocations = copyLocations;
                 nextLocations = nextLocations.stream().filter(f -> !finalCopyLocations.contains(f)).toList();
@@ -257,6 +257,13 @@ public class PlayerZipliningManager implements Listener {
                 copyLocations = Arrays.asList(copyLocations.get(copyLocations.size() - 2));
                 List<Location> finalCopyLocations = copyLocations;
                 nextLocations = nextLocations.stream().filter(f -> !finalCopyLocations.contains(f)).toList();
+            }
+
+            // hold sneak to dismount at a node
+            if (player.getPlayer().isSneaking()) {
+                var e = new ZiplinePlayer(player.getPlayer());
+                e.removeZippingData();
+                return null;
             }
 
             if (nextLocations.size() < 1)
