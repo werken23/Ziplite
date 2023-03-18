@@ -70,8 +70,8 @@ public class ZiplineVisualizeManager implements Listener {
     public void onPlayerEnterRange(ZiplineEnterPlayerRangeHandler event) {
         var slimes = event.getSlimes();
         for (var slime : slimes) {
-            var nextloc = slime.getPathData();
-            for (var next : nextloc) {
+            var nextLocation = slime.getPathData();
+            for (var next : nextLocation) {
                 spanwParticleLines(slime.getSlime().getLocation(), next, stage);
             }
         }

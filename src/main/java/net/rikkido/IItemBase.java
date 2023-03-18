@@ -7,14 +7,14 @@ import org.bukkit.inventory.ShapedRecipe;
 
 public interface IItemBase extends Listener {
 
-    public ItemStack createItem();
+    ItemStack createItem();
 
-    public ShapedRecipe createRecipe(ItemStack item);
+    ShapedRecipe createRecipe(ItemStack item);
 
-    public void dropItem(Location loc, int amount);
+    void dropItem(Location loc, int amount);
 
-    public void setAmount(ItemStack items, int amount);
+    void setAmount(ItemStack items, int amount);
 
-    public boolean isItem(ItemStack items);
+    boolean isItem(ItemStack items);
 
 }

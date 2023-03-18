@@ -4,8 +4,6 @@ import org.bukkit.configuration.ConfigurationSection;
 
 public class ItemConfig {
 
-    private static String SECTION_ITEM = "item";
-
     public ZiplineItemConfig ziplineItemconf;
 
     public ItemConfig() {
@@ -13,6 +11,7 @@ public class ItemConfig {
     }
 
     public void load(ConfigurationSection sec){
+        String SECTION_ITEM = "item";
         var inside = sec.getConfigurationSection(SECTION_ITEM);
         ziplineItemconf.load(inside);
     }

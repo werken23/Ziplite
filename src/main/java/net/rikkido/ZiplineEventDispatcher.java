@@ -23,7 +23,7 @@ public class ZiplineEventDispatcher {
                         dis.apply(p);
                     }
                 }
-            };
+            }
         }.runTaskTimer(_zipline, 0, 1);
     }
 

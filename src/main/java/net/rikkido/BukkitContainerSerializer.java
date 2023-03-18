@@ -23,8 +23,7 @@ public class BukkitContainerSerializer {
         try {
             var inStream = new ByteArrayInputStream(data);
             var dataIn = new BukkitObjectInputStream(inStream);
-            var res = (Type) dataIn.readObject();
-            return res;
+            return (Type) dataIn.readObject();
         } catch (Exception e) {
             return null;
         }

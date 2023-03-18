@@ -57,7 +57,7 @@ public class PlayerZipliningManager implements Listener {
         MovePlayer res = playerZiplining(mp);
 
         player.getPlayer().sendActionBar(Component
-                .text(String.format("`shift`to dismount!"))
+                .text("Sneak to dismount!")
                 .color(TextColor.color(255, 255, 0)));
 
         // end processing
@@ -69,17 +69,17 @@ public class PlayerZipliningManager implements Listener {
                 stopPlayerZipping(player);
                 return;
             }
-            var nextloc = calculateNextPath(slime, mp.oldlocs, player.getPlayer());
-            if (nextloc == null) {
+            var nextLocation = calculateNextPath(slime, mp.oldlocs, player.getPlayer());
+            if (nextLocation == null) {
                 stopPlayerZipping(player);
                 return;
             }
             // 継続処理(次点移動)
             player.getPlayer().setVelocity(new Vector(0, 0, 0));
             res.src = res.dst;
-            res.dst = nextloc;
+            res.dst = nextLocation;
 
-            res.oldlocs.add(nextloc);
+            res.oldlocs.add(nextLocation);
 
             res.dst.setY(res.dst.getY());
 
@@ -242,24 +242,24 @@ public class PlayerZipliningManager implements Listener {
         e.setCancelled(true);
     }
 
-    public Location calculateNextPath(PathSlime ropeEdge, List<Location> oldlocs, Player player) {
+    public Location calculateNextPath(PathSlime ropeEdge, List<Location> oldLocations, Player player) {
         if (ropeEdge.hasPathData()) {
-            List<Location> nextLocs = ropeEdge.getPathData();
+            List<Location> nextLocations = ropeEdge.getPathData();
             var current = ropeEdge.getSlime().getLocation();
-            nextLocs.remove(ropeEdge.getSlime().getLocation());
-            var copylocs = oldlocs;
-            if (copylocs.size() == 3) {
-                List<Location> finalCopylocs1 = copylocs;
-                nextLocs = nextLocs.stream().filter(f -> !finalCopylocs1.contains(f)).toList();
+            nextLocations.remove(ropeEdge.getSlime().getLocation());
+            var copyLocations = oldLocations;
+            if (copyLocations.size() == 3) {
+                List<Location> finalCopyLocations = copyLocations;
+                nextLocations = nextLocations.stream().filter(f -> !finalCopyLocations.contains(f)).toList();
             }
 
-            if (copylocs.size() > 3) {
-                copylocs = Arrays.asList(copylocs.get(copylocs.size() - 2));
-                List<Location> finalCopylocs = copylocs;
-                nextLocs = nextLocs.stream().filter(f -> !finalCopylocs.contains(f)).toList();
+            if (copyLocations.size() > 3) {
+                copyLocations = Arrays.asList(copyLocations.get(copyLocations.size() - 2));
+                List<Location> finalCopyLocations = copyLocations;
+                nextLocations = nextLocations.stream().filter(f -> !finalCopyLocations.contains(f)).toList();
             }
 
-            if (nextLocs.size() < 1)
+            if (nextLocations.size() < 1)
                 return null;
 
             if (DEBUG) {
@@ -268,10 +268,10 @@ public class PlayerZipliningManager implements Listener {
                 _plugin.getLogger().info("player position: " + s1);
             }
 
-            var nl = nextLocs.get(0);
+            var nl = nextLocations.get(0);
             Double max = 0.0d;
 
-            for (var point : nextLocs) {
+            for (var point : nextLocations) {
                 var vector = point.toVector().subtract(current.toVector());
                 vector = vector.normalize();
                 var tVector = new Vector();

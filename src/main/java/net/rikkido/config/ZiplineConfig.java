@@ -1,14 +1,9 @@
 package net.rikkido.config;
 
-import java.lang.module.Configuration;
-
 import org.bukkit.configuration.ConfigurationSection;
-import org.checkerframework.checker.units.qual.Speed;
-import org.yaml.snakeyaml.scanner.Constant;
+
 
 public class ZiplineConfig {
-
-    private static String SECTION_ZIPLINE = "zipline";
 
     public Config<Double> Speed; // block per tick
     public Config<Double> MaxRadius; // negative value means infinity
@@ -19,6 +14,7 @@ public class ZiplineConfig {
     }
 
     public void load(ConfigurationSection sec) {
+        String SECTION_ZIPLINE = "zipline";
         var insideSec = sec.getConfigurationSection(SECTION_ZIPLINE);
         Speed.load(insideSec);
         MaxRadius.load(insideSec);
