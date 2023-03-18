@@ -1,5 +1,7 @@
-# Light Zipline Plugin for Spigot, forked from https://github.com/N-Magi/Spigot-Ziplines
+## changes
+ziplines can now infinitely loop and all fence types are now usable instead of only oak
 
+## Light Zipline Plugin for Spigot, forked from https://github.com/N-Magi/Spigot-Ziplines
 it doesn't work at peaceful
 
 https://www.youtube.com/watch?v=qa2I2-lFgh0
