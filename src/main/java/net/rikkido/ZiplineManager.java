@@ -263,11 +263,11 @@ public class ZiplineManager implements Listener {
     public LeashHitch spawnHitch(PathSlime slime) {
         var world = slime.getSlime().getWorld();
         var hithes = world.getNearbyEntities(slime.getSlime().getLocation(), 1, 1, 1).stream()
-                .filter(s -> s.getType() == EntityType.LEASH_HITCH).toList();
+                .filter(s -> s.getType() == EntityType.LEASH_KNOT).toList();
         if (hithes.size() > 0) {
             return (LeashHitch) hithes.get(0);
         }
-        var hitch = world.spawnEntity(slime.getSlime().getLocation(), EntityType.LEASH_HITCH);
+        var hitch = world.spawnEntity(slime.getSlime().getLocation(), EntityType.LEASH_KNOT);
         return (LeashHitch) hitch;
 
     }
@@ -321,7 +321,7 @@ public class ZiplineManager implements Listener {
     @EventHandler
     public void onPathSlimeUnleash(HangingBreakByEntityEvent e) {
         var entity = e.getEntity();
-        if (entity.getType() != EntityType.LEASH_HITCH)
+        if (entity.getType() != EntityType.LEASH_KNOT)
             return;
         if (entity.getCustomName() == null)
             return;

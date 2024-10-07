@@ -45,7 +45,7 @@ public class ZiplineItem implements IItemBase {
         var item = new ItemStack(Material.LEAD);
         var meta = item.getItemMeta();
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        meta.addEnchant(Enchantment.DURABILITY, 1, false);
+        meta.addEnchant(Enchantment.UNBREAKING, 1, false);
         meta.setDisplayName(ChatColor.RESET + "" + ChatColor.GOLD + "ジップライン");
         meta.getPersistentDataContainer().set(ITEM_ZIPLINE, PersistentDataType.INTEGER, 1);
         item.setItemMeta(meta);
